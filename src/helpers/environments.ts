@@ -13,3 +13,4 @@ export const BASE_URL = (process.env.BASE_URL as unknown) as string;
 export const DB_URL = (process.env.DB_URL as unknown) as string;
 export const TOKEN_SECRED = (process.env.TOKEN_SECRED as unknown) as string;
 export const ENC_SALT = (process.env.ENC_SALT as unknown) as string;
+export const SEED_PASSWORD = (process.env.SEED_PASSWORD as unknown) as string;
