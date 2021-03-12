@@ -3,7 +3,7 @@ import { BASE_URL } from "../helpers/environments";
 import { OrganizationDocument } from "./organization";
 import { WriterDocument } from "./writer";
 
-export enum VisualizatioNDocument {
+export enum VisualizationDocument {
     schemaName = "visualization",
     title = "title",
     body = "body",
@@ -14,43 +14,43 @@ export enum VisualizatioNDocument {
 }
 
 interface IVisualization extends Document {
-    [VisualizatioNDocument.title]?: string;
-    [VisualizatioNDocument.body]?: string;
-    [VisualizatioNDocument.slug]?: string;
-    [VisualizatioNDocument.thumbnail]?: string;
-    [VisualizatioNDocument.organizationId]?: string;
-    [VisualizatioNDocument.writerId]?: string;
+    [VisualizationDocument.title]?: string;
+    [VisualizationDocument.body]?: string;
+    [VisualizationDocument.slug]?: string;
+    [VisualizationDocument.thumbnail]?: string;
+    [VisualizationDocument.organizationId]?: string;
+    [VisualizationDocument.writerId]?: string;
 }
 
 const schema = new Schema(
     {
-        [VisualizatioNDocument.title]: {
+        [VisualizationDocument.title]: {
             type: String,
             required: true,
         },
 
-        [VisualizatioNDocument.body]: {
+        [VisualizationDocument.body]: {
             type: String,
             required: true,
         },
 
-        [VisualizatioNDocument.slug]: {
+        [VisualizationDocument.slug]: {
             type: String,
             required: true,
             unique: true,
         },
 
-        [VisualizatioNDocument.thumbnail]: {
+        [VisualizationDocument.thumbnail]: {
             type: String,
             required: true,
         },
 
-        [VisualizatioNDocument.organizationId]: {
+        [VisualizationDocument.organizationId]: {
             type: String,
             required: true,
         },
 
-        [VisualizatioNDocument.writerId]: {
+        [VisualizationDocument.writerId]: {
             type: String,
             required: true,
         },
@@ -62,14 +62,14 @@ const schema = new Schema(
 
 schema.virtual(OrganizationDocument.schemaName, {
     ref: OrganizationDocument.schemaName,
-    localField: VisualizatioNDocument.organizationId,
+    localField: VisualizationDocument.organizationId,
     foreignField: "_id",
     justOne: true,
 });
 
 schema.virtual(WriterDocument.schemaName, {
     ref: WriterDocument.schemaName,
-    localField: VisualizatioNDocument.writerId,
+    localField: VisualizationDocument.writerId,
     foreignField: "_id",
     justOne: true,
 });
@@ -77,7 +77,7 @@ schema.virtual(WriterDocument.schemaName, {
 schema.set("toJSON", {
     transform: (_: any, ret: any, __: any) => {
         delete ret.id;
-        ret[VisualizatioNDocument.thumbnail] = BASE_URL + "uploads/" + ret[VisualizatioNDocument.thumbnail];
+        ret[VisualizationDocument.thumbnail] = BASE_URL + "uploads/" + ret[VisualizationDocument.thumbnail];
 
         return ret;
     },
@@ -85,4 +85,4 @@ schema.set("toJSON", {
     virtuals: true,
 });
 
-export default mongoose.model<IVisualization>(VisualizatioNDocument.schemaName, schema);
+export default mongoose.model<IVisualization>(VisualizationDocument.schemaName, schema);
