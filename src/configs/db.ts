@@ -7,6 +7,7 @@ export default async () => {
         useUnifiedTopology: true,
         useFindAndModify: false,
         useCreateIndex: true,
+        autoIndex: true
     };
 
     return await mongoose.connect(DB_URL, options);
