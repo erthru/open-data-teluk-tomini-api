@@ -1,4 +1,7 @@
 import mongoose, { Document, Schema } from "mongoose";
+import { BASE_URL } from "../helpers/environments";
+import { OrganizationDocument } from "./organization";
+import { WriterDocument } from "./writer";
 
 export enum VisualizatioNDocument {
     schemaName = "visualization",
@@ -56,5 +59,30 @@ const schema = new Schema(
         timestamps: true,
     }
 );
+
+schema.virtual(OrganizationDocument.schemaName, {
+    ref: OrganizationDocument.schemaName,
+    localField: VisualizatioNDocument.organizationId,
+    foreignField: "_id",
+    justOne: true,
+});
+
+schema.virtual(WriterDocument.schemaName, {
+    ref: WriterDocument.schemaName,
+    localField: VisualizatioNDocument.writerId,
+    foreignField: "_id",
+    justOne: true,
+});
+
+schema.set("toJSON", {
+    transform: (_: any, ret: any, __: any) => {
+        delete ret.id;
+        ret[VisualizatioNDocument.thumbnail] = BASE_URL + "uploads/" + ret[VisualizatioNDocument.thumbnail];
+
+        return ret;
+    },
+
+    virtuals: true,
+});
 
 export default mongoose.model<IVisualization>(VisualizatioNDocument.schemaName, schema);
