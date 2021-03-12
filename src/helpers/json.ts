@@ -14,3 +14,10 @@ export const UNAUTHORIZED = (res: Response) => {
         message: "UNAUTHORIZED",
     });
 };
+
+export const ERROR = (res: Response, message: string) => {
+    res.status(500).json({
+        error: true,
+        message: message,
+    });
+};
