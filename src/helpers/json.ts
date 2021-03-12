@@ -7,3 +7,10 @@ export const OK = (res: Response, data?: any, additionalMessage?: string) => {
         ...data,
     });
 };
+
+export const UNAUTHORIZED = (res: Response) => {
+    res.status(401).json({
+        error: true,
+        message: "UNAUTHORIZED",
+    });
+};
