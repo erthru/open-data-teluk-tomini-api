@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { Mode, MODE, SEED_PASSWORD } from "../helpers/environments";
-import { ERROR, UNAUTHORIZED } from "../helpers/json";
+import { Mode, MODE, SEEDER_PASSWORD } from "../helpers/environments";
+import { CREATED, ERROR, UNAUTHORIZED } from "../helpers/json";
 import faker from "faker";
 import {
     CATEGORY_ICONS,
@@ -24,7 +24,7 @@ import visualizationSchema, { VisualizationDocument } from "../schemas/visualiza
 
 export const add = async (req: Request, res: Response) => {
     try {
-        if (req.body.password === SEED_PASSWORD) {
+        if (req.body.password === SEEDER_PASSWORD) {
             for (let i = 0; i < CATEGORY_NAMES.length; i++) {
                 await categorySchema.create({
                     [CategoryDocument.name]: CATEGORY_NAMES[i],
@@ -135,6 +135,8 @@ export const add = async (req: Request, res: Response) => {
                         [VisualizationDocument.writerId]: writerId,
                     });
                 }
+
+                CREATED(res);
             }
         } else UNAUTHORIZED(res);
     } catch (e: any) {
