@@ -7,7 +7,6 @@
     <li>NodeJS</li>
 </ul>
 
-<br />
 <h4>How To Use:</h4>
 
 <ul>
@@ -16,7 +15,8 @@
     <li>Setup <strong>.env</strong> variables</li>
     <li>Run <strong>npm install</strong></li>
     <li>Execute seeder in:
-    <br>
+    <br />
+    <br />
     <table style="width: 100%">
         <tbody>
             <tr>
