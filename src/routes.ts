@@ -7,7 +7,8 @@ import * as organizationRepository from "./repositories/organization-repository"
 import * as infographicRepository from "./repositories/infographic-repository";
 import * as authRepository from "./repositories/auth-repository";
 import checkAuth from "./middlewares/check-auth";
-import { AuthLevel } from "./schemas/auth";
+import uploader, { UploadType } from "./middlewares/uploader";
+import { OrganizationDocument } from "./schemas/organization";
 
 const router = Router();
 
@@ -30,8 +31,10 @@ router.get("/organization/slug/:slug", organizationRepository.getBySlug);
 router.get("/infographics", infographicRepository.getAll);
 router.get("/infographics/search/query", infographicRepository.search);
 
-router.get("/auth/refresh", checkAuth([AuthLevel.ADMIN, AuthLevel.ORGANIZATION, AuthLevel.WRITER]).verifyForRefresh, authRepository.refresh);
+router.get("/auth/refresh", checkAuth.verifyForRefresh, authRepository.refresh);
+router.get("/auth/me", checkAuth.verify, authRepository.get);
 router.post("/auth/login", authRepository.login);
+router.put("/auth/me", checkAuth.verify, uploader(UploadType.organizationPhoto).single(OrganizationDocument.photo), authRepository.update);
 
 router.post("/seeder", seederRepository.add);
 
