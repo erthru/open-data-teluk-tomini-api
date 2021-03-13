@@ -6,6 +6,7 @@ export enum OrganizationDocument {
     name = "name",
     description = "description",
     photo = "photo",
+    slug = "slug",
     authId = "authId",
 }
 
@@ -13,6 +14,7 @@ interface IOrganization extends Document {
     [OrganizationDocument.name]?: string;
     [OrganizationDocument.description]?: string;
     [OrganizationDocument.photo]?: string;
+    [OrganizationDocument.slug]?: string;
     [OrganizationDocument.authId]?: string;
 }
 
@@ -30,6 +32,12 @@ const schema = new Schema(
         [OrganizationDocument.photo]: {
             type: String,
             required: true,
+        },
+
+        [OrganizationDocument.slug]: {
+            type: String,
+            required: true,
+            unique: true,
         },
 
         [OrganizationDocument.authId]: {

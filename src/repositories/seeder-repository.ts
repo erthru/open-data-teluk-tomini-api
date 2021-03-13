@@ -50,10 +50,13 @@ export const add = async (req: Request, res: Response) => {
                     [AuthDocument.level]: AuthLevel.ORGANIZATION,
                 });
 
+                const organizationName0 = faker.company.companyName()
+
                 await organizationSchema.create({
-                    [OrganizationDocument.name]: faker.company.companyName(),
+                    [OrganizationDocument.name]: organizationName0,
                     [OrganizationDocument.description]: faker.lorem.paragraph(),
                     [OrganizationDocument.photo]: ORGANIZATION_PHOTO_FOR_SEEDER,
+                    [OrganizationDocument.slug]: createSlug(organizationName0),
                     [OrganizationDocument.authId]: authForOrganization0._id,
                 });
 
@@ -63,10 +66,13 @@ export const add = async (req: Request, res: Response) => {
                     [AuthDocument.level]: AuthLevel.ORGANIZATION,
                 });
 
+                const organizationName1 = faker.company.companyName()
+
                 await organizationSchema.create({
-                    [OrganizationDocument.name]: faker.company.companyName(),
+                    [OrganizationDocument.name]: organizationName1,
                     [OrganizationDocument.description]: faker.lorem.paragraph(),
                     [OrganizationDocument.photo]: ORGANIZATION_PHOTO_FOR_SEEDER,
+                    [OrganizationDocument.slug]: createSlug(organizationName1),
                     [OrganizationDocument.authId]: authForOrganization1._id,
                 });
 

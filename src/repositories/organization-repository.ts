@@ -31,3 +31,12 @@ export const getAllWithDatasetsTotal = async (req: Request, res: Response) => {
         ERROR(res, e.message);
     }
 };
+
+export const getBySlug = async (req: Request, res: Response) => {
+    try {
+        const organization = await organizationSchema.findOne({ [OrganizationDocument.slug]: req.params.slug });
+        OK(res, { organization: organization });
+    } catch (e: any) {
+        ERROR(res, e.message);
+    }
+};

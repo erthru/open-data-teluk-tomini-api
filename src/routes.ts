@@ -17,6 +17,7 @@ router.put("/dataset/:id/increment-downloaded", datasetRepository.updateIncremen
 router.get("/visualizations", visualizationRepository.getAll);
 
 router.get("/organizations/include-datasets-total", organizationRepository.getAllWithDatasetsTotal);
+router.get("/organization/slug/:slug", organizationRepository.getBySlug);
 
 router.post("/seeder", seederRepository.add);
 
