@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { TOKEN_SECRED } from "../helpers/environments";
+import { TOKEN_SECRET } from "../helpers/environments";
 import { UNAUTHORIZED } from "../helpers/json";
 import { AuthLevel } from "../schemas/auth";
 
@@ -15,7 +15,7 @@ export default (requiredLevels: AuthLevel[]) => {
         verify: (req: Request, res: Response, next: NextFunction) => {
             try {
                 const token = req.headers.authorization!!.split(" ")[1];
-                const authVerified = jwt.verify(token, TOKEN_SECRED) as AuthVerified;
+                const authVerified = jwt.verify(token, TOKEN_SECRET) as AuthVerified;
 
                 if (!requiredLevels.includes(authVerified.level) || authVerified.isRefreshToken) UNAUTHORIZED(res);
                 else {
@@ -29,7 +29,7 @@ export default (requiredLevels: AuthLevel[]) => {
         verifyForRefresh: (req: Request, res: Response, next: NextFunction) => {
             try {
                 const token = req.headers.authorization!!.split(" ")[1];
-                const authVerified = jwt.verify(token, TOKEN_SECRED) as AuthVerified;
+                const authVerified = jwt.verify(token, TOKEN_SECRET) as AuthVerified;
 
                 if (!authVerified.isRefreshToken) UNAUTHORIZED(res);
                 else {
