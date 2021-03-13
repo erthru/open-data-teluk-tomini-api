@@ -18,13 +18,14 @@ router.get("/dataset/slug/:slug", datasetRepository.getBySlug);
 router.put("/dataset/:id/increment-downloaded", datasetRepository.updateIncrementDownloaded);
 
 router.get("/visualizations", visualizationRepository.getAll);
-router.get("/visualizations/search/query", visualizationRepository.search)
+router.get("/visualizations/search/query", visualizationRepository.search);
 router.get("/visualization/slug/:slug", visualizationRepository.getBySlug);
 
 router.get("/organizations/include-datasets-total", organizationRepository.getAllWithDatasetsTotal);
 router.get("/organization/slug/:slug", organizationRepository.getBySlug);
 
 router.get("/infographics", infographicRepository.getAll);
+router.get("/infographics/search/query", infographicRepository.search);
 
 router.post("/seeder", seederRepository.add);
 
