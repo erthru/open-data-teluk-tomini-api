@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ERROR, OK } from "../helpers/json";
-import visualizationSchema from "../schemas/visualization";
+import visualizationSchema, { VisualizationDocument } from "../schemas/visualization";
 
 export const getAll = async (req: Request, res: Response) => {
     try {
@@ -14,6 +14,15 @@ export const getAll = async (req: Request, res: Response) => {
             visualizations: visualizations,
             total: total,
         });
+    } catch (e: any) {
+        ERROR(res, e.message);
+    }
+};
+
+export const getBySlug = async (req: Request, res: Response) => {
+    try {
+        const visualization = await visualizationSchema.findOne({ [VisualizationDocument.slug]: req.params.slug });
+        OK(res, { visualization: visualization });
     } catch (e: any) {
         ERROR(res, e.message);
     }
