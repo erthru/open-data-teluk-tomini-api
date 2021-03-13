@@ -25,6 +25,22 @@ const getDatasetsWithTags = async (datasets: any[]): Promise<any[]> => {
     return fixedDatasets;
 };
 
+const getDatasetWithTags = async (dataset: any): Promise<any> => {
+    const tags: any[] = [];
+
+    for (let tagId of dataset?.tagIds!!) {
+        const tag = await tagSchema.findById(tagId);
+        tags.push(tag);
+    }
+
+    const fixedDataset = {
+        ...dataset.toJSON(),
+        tags: tags,
+    };
+
+    return fixedDataset;
+};
+
 export const getAll = async (req: Request, res: Response) => {
     try {
         const limit = parseInt(req.query.limit as string);
@@ -76,5 +92,38 @@ export const getAllByCategoryId = async (req: Request, res: Response) => {
         });
     } catch (e: any) {
         ERROR(res, e.mssage);
+    }
+};
+
+export const getBySlug = async (req: Request, res: Response) => {
+    try {
+        const dataset = await datasetSchema
+            .findOne({ [DatasetDocument.slug]: req.params.slug })
+            .populate(CategoryDocument.schemaName)
+            .populate(OrganizationDocument.schemaName);
+
+        const datasetWithTags = await getDatasetWithTags(dataset);
+
+        OK(res, { dataset: datasetWithTags });
+    } catch (e: any) {
+        ERROR(res, e.message);
+    }
+};
+
+export const updateIncrementDownloaded = async (req: Request, res: Response) => {
+    try {
+        const oldDataset = await datasetSchema.findById(req.params.id);
+
+        const dataset = await datasetSchema.findByIdAndUpdate(
+            req.params.id,
+            {
+                [DatasetDocument.downloaded]: oldDataset?.downloaded!! + 1,
+            },
+            { new: true }
+        );
+
+        OK(res, { dataset: dataset });
+    } catch (e: any) {
+        ERROR(res, e.message);
     }
 };

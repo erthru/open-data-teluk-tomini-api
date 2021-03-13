@@ -10,6 +10,7 @@ router.get("/categories", categoryRepository.getAll);
 
 router.get("/datasets", datasetRepository.getAll);
 router.get("/datasets/category-id/:categoryId", datasetRepository.getAllByCategoryId);
+router.get("/dataset/slug/:slug", datasetRepository.getBySlug);
 
 router.get("/visualizations", visualizationRepository.getAll);
 
