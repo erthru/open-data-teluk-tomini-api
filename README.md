@@ -1,6 +1,5 @@
 <h2>Open Data Teluk Tomini API</h2>
 <hr />
-<br />
 <h4>Requirements:</h4>
 
 <ul>
