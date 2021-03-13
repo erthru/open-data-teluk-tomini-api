@@ -28,5 +28,7 @@ public/uploads/*
 !public/uploads/category-icon-share-alt-solid.png
 !public/uploads/organization-photo-for-seeder.jpg
 !public/uploads/dataset-attachment-for-seeder.csv
+!public/uploads/infographic-banner-for-seeder.jpeg
+!public/uploads/visualization-thumbnail-for-seeder.jpeg
 src/logs/*
 !src/logs/README.md

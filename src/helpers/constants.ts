@@ -54,3 +54,5 @@ export const CATEGORY_NAMES = [
 
 export const ORGANIZATION_PHOTO_FOR_SEEDER = "organization-photo-for-seeder.jpg";
 export const DATASET_ATTACHMENT_FOR_SEEDER = "dataset-attachment-for-seeder.csv";
+export const INFOGRAPHIC_BANNER_FOR_SEEDER = "infographic-banner-for-seeder.jpeg";
+export const VISUALIZATION_THUMBNAIL_FOR_SEEDER = "visualization-thumbnail-for-seeder.jpeg";

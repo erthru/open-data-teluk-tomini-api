@@ -2,7 +2,14 @@ import { Request, Response } from "express";
 import { Mode, MODE, SEED_PASSWORD } from "../helpers/environments";
 import { ERROR, UNAUTHORIZED } from "../helpers/json";
 import faker from "faker";
-import { CATEGORY_ICONS, CATEGORY_NAMES, DATASET_ATTACHMENT_FOR_SEEDER, ORGANIZATION_PHOTO_FOR_SEEDER } from "../helpers/constants";
+import {
+    CATEGORY_ICONS,
+    CATEGORY_NAMES,
+    DATASET_ATTACHMENT_FOR_SEEDER,
+    INFOGRAPHIC_BANNER_FOR_SEEDER,
+    ORGANIZATION_PHOTO_FOR_SEEDER,
+    VISUALIZATION_THUMBNAIL_FOR_SEEDER,
+} from "../helpers/constants";
 import categorySchema, { CategoryDocument } from "../schemas/category";
 import authSchema, { AuthDocument, AuthLevel } from "../schemas/auth";
 import adminSchema, { AdminDocument } from "../schemas/admin";
@@ -12,6 +19,8 @@ import writerSchema, { WriterDocument } from "../schemas/writer";
 import datasetSchema, { DatasetDocument } from "../schemas/dataset";
 import { createSlug } from "../helpers/generate-string";
 import tagSchema, { TagDocument } from "../schemas/tag";
+import infographicSchema, { InfographicDocument } from "../schemas/infographic";
+import visualizationSchema, { VisualizationDocument } from "../schemas/visualization";
 
 export const add = async (req: Request, res: Response) => {
     try {
@@ -99,6 +108,31 @@ export const add = async (req: Request, res: Response) => {
                         [DatasetDocument.tagIds]: tagIds,
                         [DatasetDocument.categoryId]: categoryId,
                         [DatasetDocument.organizationId]: organizationId,
+                    });
+                }
+
+                for (let i = 0; i < 14; i++) {
+                    const writerId = (await writerSchema.find())[0]._id;
+
+                    await infographicSchema.create({
+                        [InfographicDocument.title]: faker.lorem.lines(),
+                        [InfographicDocument.banner]: INFOGRAPHIC_BANNER_FOR_SEEDER,
+                        [InfographicDocument.writerId]: writerId,
+                    });
+                }
+
+                for (let i = 0; i < 14; i++) {
+                    const organizationId = (await organizationSchema.find())[Math.floor(Math.random() * 2)]._id!!;
+                    const writerId = (await writerSchema.find())[0]._id;
+                    const title = faker.lorem.lines();
+
+                    await visualizationSchema.create({
+                        [VisualizationDocument.title]: title,
+                        [VisualizationDocument.body]: faker.lorem.paragraphs(),
+                        [VisualizationDocument.slug]: createSlug(title),
+                        [VisualizationDocument.thumbnail]: VISUALIZATION_THUMBNAIL_FOR_SEEDER,
+                        [VisualizationDocument.organizationId]: organizationId,
+                        [VisualizationDocument.writerId]: writerId,
                     });
                 }
             }
