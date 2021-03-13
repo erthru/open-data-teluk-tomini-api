@@ -16,6 +16,10 @@ export const CREATED = (res: Response, data?: any) => {
     });
 };
 
+export const NO_CONTENT = (res: Response) => {
+    res.status(204).json({});
+};
+
 export const UNAUTHORIZED = (res: Response) => {
     res.status(401).json({
         error: true,

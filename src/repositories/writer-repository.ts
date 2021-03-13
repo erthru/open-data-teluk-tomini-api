@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CREATED, ERROR, OK, UNAUTHORIZED } from "../helpers/json";
+import { CREATED, ERROR, OK, UNAUTHORIZED, NO_CONTENT } from "../helpers/json";
 import writerSchema, { WriterDocument } from "../schemas/writer";
 import authSchema, { AuthDocument, AuthLevel } from "../schemas/auth";
 import { encrypt } from "../helpers/encryption";
@@ -62,6 +62,20 @@ export const update = async (req: Request, res: Response) => {
             });
 
             OK(res, { writer: writer });
+        } else UNAUTHORIZED(res);
+    } catch (e: any) {
+        ERROR(res, e.message);
+    }
+};
+
+export const remove = async (req: Request, res: Response) => {
+    try {
+        const auth = await authSchema.findById(req.authVerified.id);
+
+        if (auth?.level === AuthLevel.ADMIN) {
+            const writer = await writerSchema.findByIdAndDelete(req.params.id);
+            await authSchema.findByIdAndDelete(writer?.authId);
+            NO_CONTENT(res);
         } else UNAUTHORIZED(res);
     } catch (e: any) {
         ERROR(res, e.message);

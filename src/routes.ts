@@ -40,6 +40,7 @@ router.put("/auth/me", checkAuth.verify, uploader(UploadType.organizationPhoto).
 router.get("/writers", checkAuth.verify, writerRepository.getAll);
 router.post("/writer", checkAuth.verify, writerRepository.add);
 router.put("/writer/:id", checkAuth.verify, writerRepository.update);
+router.delete("/writer/:id", checkAuth.verify, writerRepository.remove);
 
 router.post("/seeder", seederRepository.add);
 
