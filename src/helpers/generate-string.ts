@@ -11,5 +11,5 @@ export const createSlug = (string: string): string => {
         string = string.slice(0, -1);
     }
 
-    return string;
+    return string + `-${new Date().getTime()}`;
 };

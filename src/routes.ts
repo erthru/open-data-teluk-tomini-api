@@ -26,8 +26,12 @@ router.get("/visualizations", visualizationRepository.getAll);
 router.get("/visualizations/search/query", visualizationRepository.search);
 router.get("/visualization/slug/:slug", visualizationRepository.getBySlug);
 
+router.get("/organizations", organizationRepository.getAll);
 router.get("/organizations/include-datasets-total", organizationRepository.getAllWithDatasetsTotal);
 router.get("/organization/slug/:slug", organizationRepository.getBySlug);
+router.post("/organization", checkAuth.verify, uploader(UploadType.organizationPhoto).single(OrganizationDocument.photo), organizationRepository.add);
+router.put("/organization/:id", checkAuth.verify, uploader(UploadType.organizationPhoto).single(OrganizationDocument.photo), organizationRepository.update);
+router.delete("/organization/:id", checkAuth.verify, organizationRepository.remove);
 
 router.get("/infographics", infographicRepository.getAll);
 router.get("/infographics/search/query", infographicRepository.search);
