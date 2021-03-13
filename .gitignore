@@ -27,5 +27,6 @@ public/uploads/*
 !public/uploads/category-icon-gripfire-brands.png
 !public/uploads/category-icon-share-alt-solid.png
 !public/uploads/organization-photo-for-seeder.jpg
+!public/uploads/dataset-attachment-for-seeder.csv
 src/logs/*
 !src/logs/README.md

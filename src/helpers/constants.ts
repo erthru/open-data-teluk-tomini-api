@@ -52,4 +52,5 @@ export const CATEGORY_NAMES = [
     "Sosial",
 ];
 
-export const ORGANIZATION_PHOTO_FOR_SEEDER = "organization-photo-for-seeder.jpg"
+export const ORGANIZATION_PHOTO_FOR_SEEDER = "organization-photo-for-seeder.jpg";
+export const DATASET_ATTACHMENT_FOR_SEEDER = "dataset-attachment-for-seeder.csv";
