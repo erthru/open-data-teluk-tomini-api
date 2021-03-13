@@ -9,6 +9,7 @@ import * as authRepository from "./repositories/auth-repository";
 import checkAuth from "./middlewares/check-auth";
 import uploader, { UploadType } from "./middlewares/uploader";
 import { OrganizationDocument } from "./schemas/organization";
+import * as writerRepository from "./repositories/writer-repository";
 
 const router = Router();
 
@@ -35,6 +36,10 @@ router.get("/auth/refresh", checkAuth.verifyForRefresh, authRepository.refresh);
 router.get("/auth/me", checkAuth.verify, authRepository.get);
 router.post("/auth/login", authRepository.login);
 router.put("/auth/me", checkAuth.verify, uploader(UploadType.organizationPhoto).single(OrganizationDocument.photo), authRepository.update);
+
+router.get("/writers", checkAuth.verify, writerRepository.getAll);
+router.post("/writer", checkAuth.verify, writerRepository.add);
+router.put("/writer/:id", checkAuth.verify, writerRepository.update);
 
 router.post("/seeder", seederRepository.add);
 
