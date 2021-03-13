@@ -3,6 +3,7 @@ import * as categoryRepository from "./repositories/category-repository";
 import * as datasetRepository from "./repositories/dataset-repository";
 import * as visualizationRepository from "./repositories/visualization-repository";
 import * as seederRepository from "./repositories/seeder-repository";
+import * as organizationRepository from "./repositories/organization-repository";
 
 const router = Router();
 
@@ -14,6 +15,8 @@ router.get("/dataset/slug/:slug", datasetRepository.getBySlug);
 router.put("/dataset/:id/increment-downloaded", datasetRepository.updateIncrementDownloaded);
 
 router.get("/visualizations", visualizationRepository.getAll);
+
+router.get("/organizations/include-datasets-total", organizationRepository.getAllWithDatasetsTotal);
 
 router.post("/seeder", seederRepository.add);
 
