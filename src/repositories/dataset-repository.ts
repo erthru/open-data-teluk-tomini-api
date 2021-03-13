@@ -95,6 +95,35 @@ export const getAllByCategoryId = async (req: Request, res: Response) => {
     }
 };
 
+export const getAllByOrganizationId = async (req: Request, res: Response) => {
+    try {
+        const limit = parseInt(req.query.limit as string);
+        const skip = (parseInt(req.query.page as string) - 1) * parseInt(req.query.limit as string);
+
+        const filter = {
+            [DatasetDocument.organizationId]: req.params.organizationId,
+        };
+
+        const datasets = await datasetSchema
+            .find(filter)
+            .sort({ _id: -1 })
+            .populate(CategoryDocument.schemaName)
+            .populate(OrganizationDocument.schemaName)
+            .skip(skip)
+            .limit(limit);
+
+        const datasetsWithTags = await getDatasetsWithTags(datasets);
+        const total = await datasetSchema.countDocuments(filter);
+
+        OK(res, {
+            datasets: datasetsWithTags,
+            total: total,
+        });
+    } catch (e: any) {
+        ERROR(res, e.mssage);
+    }
+};
+
 export const getBySlug = async (req: Request, res: Response) => {
     try {
         const dataset = await datasetSchema
