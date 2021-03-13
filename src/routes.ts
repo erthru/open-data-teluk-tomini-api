@@ -10,10 +10,14 @@ import checkAuth from "./middlewares/check-auth";
 import uploader, { UploadType } from "./middlewares/uploader";
 import { OrganizationDocument } from "./schemas/organization";
 import * as writerRepository from "./repositories/writer-repository";
+import { CategoryDocument } from "./schemas/category";
 
 const router = Router();
 
 router.get("/categories", categoryRepository.getAll);
+router.post("/category", checkAuth.verify, uploader(UploadType.categoryIcon).single(CategoryDocument.icon), categoryRepository.add);
+router.put("/category/:id", checkAuth.verify, uploader(UploadType.categoryIcon).single(CategoryDocument.icon), categoryRepository.update);
+router.delete("/category/:id", checkAuth.verify, categoryRepository.remove);
 
 router.get("/datasets", datasetRepository.getAll);
 router.get("/datasets/category-id/:categoryId", datasetRepository.getAllByCategoryId);
@@ -30,7 +34,12 @@ router.get("/organizations", organizationRepository.getAll);
 router.get("/organizations/include-datasets-total", organizationRepository.getAllWithDatasetsTotal);
 router.get("/organization/slug/:slug", organizationRepository.getBySlug);
 router.post("/organization", checkAuth.verify, uploader(UploadType.organizationPhoto).single(OrganizationDocument.photo), organizationRepository.add);
-router.put("/organization/:id", checkAuth.verify, uploader(UploadType.organizationPhoto).single(OrganizationDocument.photo), organizationRepository.update);
+router.put(
+    "/organization/:id",
+    checkAuth.verify,
+    uploader(UploadType.organizationPhoto).single(OrganizationDocument.photo),
+    organizationRepository.update
+);
 router.delete("/organization/:id", checkAuth.verify, organizationRepository.remove);
 
 router.get("/infographics", infographicRepository.getAll);
