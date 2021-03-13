@@ -1,0 +1,2 @@
+::1 - GET / HTTP/1.1 200 38 - 11.250 ms
+::1 - GET /favicon.ico HTTP/1.1 404 150 - 2.003 ms

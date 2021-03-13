@@ -1,7 +1,6 @@
 .env
 node_modules/
 public/uploads/*
-!public/uploads/README.md
 !public/uploads/category-icon-star-and-crescent-solid.png
 !public/uploads/category-icon-tree-solid.png
 !public/uploads/category-icon-water-solid.png
@@ -31,4 +30,4 @@ public/uploads/*
 !public/uploads/infographic-banner-for-seeder.jpeg
 !public/uploads/visualization-thumbnail-for-seeder.jpeg
 src/logs/*
-!src/logs/README.md
+!src/logs/example.log
