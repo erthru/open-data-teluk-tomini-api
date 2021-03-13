@@ -5,6 +5,9 @@ import * as visualizationRepository from "./repositories/visualization-repositor
 import * as seederRepository from "./repositories/seeder-repository";
 import * as organizationRepository from "./repositories/organization-repository";
 import * as infographicRepository from "./repositories/infographic-repository";
+import * as authRepository from "./repositories/auth-repository";
+import checkAuth from "./middlewares/check-auth";
+import { AuthLevel } from "./schemas/auth";
 
 const router = Router();
 
@@ -26,6 +29,9 @@ router.get("/organization/slug/:slug", organizationRepository.getBySlug);
 
 router.get("/infographics", infographicRepository.getAll);
 router.get("/infographics/search/query", infographicRepository.search);
+
+router.get("/auth/refresh", checkAuth([AuthLevel.ADMIN, AuthLevel.ORGANIZATION, AuthLevel.WRITER]).verifyForRefresh, authRepository.refresh);
+router.post("/auth/login", authRepository.login);
 
 router.post("/seeder", seederRepository.add);
 
