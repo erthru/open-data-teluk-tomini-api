@@ -1,7 +1,7 @@
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
 import "mocha";
-import { BASE_URL } from "../../src/helpers/environments";
+import { BASE_URL } from "../src/helpers/environments";
 import fetch from "node-fetch";
 
 chai.use(chaiAsPromised);
