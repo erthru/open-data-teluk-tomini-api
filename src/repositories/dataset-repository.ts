@@ -7,6 +7,9 @@ import tagSchema from "../schemas/tag";
 import authSchema, { AuthLevel } from "../schemas/auth";
 import organizationSchema from "../schemas/organization";
 import { createSlug } from "../helpers/generate-string";
+import { DATASET_ATTACHMENT_FOR_SEEDER } from "../helpers/constants";
+import fs from "fs";
+import path from "path";
 
 const getDatasetsWithTags = async (datasets: any[]): Promise<any[]> => {
     const fixedDatasets: any[] = [];
@@ -195,6 +198,39 @@ export const add = async (req: Request, res: Response) => {
             });
 
             CREATED(res, { dataset: dataset });
+        } else UNAUTHORIZED(res);
+    } catch (e: any) {
+        ERROR(res, e.message);
+    }
+};
+
+export const update = async (req: Request, res: Response) => {
+    try {
+        const auth = await authSchema.findById(req.authVerified.id);
+        const organization = await organizationSchema.findOne({ [OrganizationDocument.authId]: auth?._id });
+        const oldDataset = await datasetSchema.findById(req.params.id);
+
+        if (auth?.level === AuthLevel.ORGANIZATION && oldDataset?.organizationId === organization?._id.toString()) {
+            if (req.file !== undefined && oldDataset!!.attachment !== DATASET_ATTACHMENT_FOR_SEEDER)
+                fs.unlinkSync(path.join("public/uploads/" + oldDataset?.attachment));
+
+            const dataset = await datasetSchema.findByIdAndUpdate(
+                req.params.id,
+                {
+                    [DatasetDocument.title]: req.body.title,
+                    [DatasetDocument.description]: req.body.description,
+                    [DatasetDocument.source]: req.body.source,
+                    [DatasetDocument.year]: req.body.year,
+                    [DatasetDocument.contact]: req.body.contact,
+                    [DatasetDocument.reference]: req.body.reference,
+                    [DatasetDocument.attachment]: req.file === undefined ? oldDataset?.attachment : req.file.filename,
+                    [DatasetDocument.tagIds]: req.body.tagIds,
+                    [DatasetDocument.categoryId]: req.body.categoryId,
+                },
+                { new: true }
+            );
+
+            OK(res, { dataset: dataset });
         } else UNAUTHORIZED(res);
     } catch (e: any) {
         ERROR(res, e.message);

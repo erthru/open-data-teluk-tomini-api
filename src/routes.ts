@@ -27,6 +27,7 @@ router.get("/datasets/organization-id/:organizationId", datasetRepository.getAll
 router.get("/datasets/search/query", datasetRepository.search);
 router.get("/dataset/slug/:slug", datasetRepository.getBySlug);
 router.post("/dataset", checkAuth.verify, uploader(UploadType.datasetAttachment).single(DatasetDocument.attachment), datasetRepository.add);
+router.put("/dataset/:id", checkAuth.verify, uploader(UploadType.datasetAttachment).single(DatasetDocument.attachment), datasetRepository.update);
 router.put("/dataset/:id/increment-downloaded", datasetRepository.updateIncrementDownloaded);
 
 router.get("/visualizations", visualizationRepository.getAll);
