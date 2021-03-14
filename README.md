@@ -13,6 +13,7 @@
     <li>Copy <strong>.env.example</strong> file to <strong>.env</strong></li>
     <li>Setup <strong>.env</strong> variables</li>
     <li>Run <strong>npm install</strong></li>
+    <li>Run <strong>npm run watch</strong></li>
     <li>Execute seeder in:
     <br />
     <br />
