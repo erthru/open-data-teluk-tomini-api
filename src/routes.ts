@@ -13,6 +13,7 @@ import * as writerRepository from "./repositories/writer-repository";
 import { CategoryDocument } from "./schemas/category";
 import * as tagRepository from "./repositories/tag-repository";
 import { DatasetDocument } from "./schemas/dataset";
+import { VisualizationDocument } from "./schemas/visualization";
 
 const router = Router();
 
@@ -34,6 +35,19 @@ router.delete("/dataset/:id", checkAuth.verify, datasetRepository.remove);
 router.get("/visualizations", visualizationRepository.getAll);
 router.get("/visualizations/search/query", visualizationRepository.search);
 router.get("/visualization/slug/:slug", visualizationRepository.getBySlug);
+router.post(
+    "/visualization",
+    checkAuth.verify,
+    uploader(UploadType.visualizationThumbnail).single(VisualizationDocument.thumbnail),
+    visualizationRepository.add
+);
+router.put(
+    "/visualization/:id",
+    checkAuth.verify,
+    uploader(UploadType.visualizationThumbnail).single(VisualizationDocument.thumbnail),
+    visualizationRepository.update
+);
+router.delete("/visualization/:id", checkAuth.verify, visualizationRepository.remove);
 
 router.get("/organizations", organizationRepository.getAll);
 router.get("/organizations/include-datasets-total", organizationRepository.getAllWithDatasetsTotal);
