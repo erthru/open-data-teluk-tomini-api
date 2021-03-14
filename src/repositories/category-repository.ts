@@ -44,9 +44,6 @@ export const update = async (req: Request, res: Response) => {
         if (auth?.level === AuthLevel.ADMIN) {
             const oldCategory = await categorySchema.findById(req.params.id);
 
-            if (req.file !== undefined && !CATEGORY_ICONS.includes(oldCategory?.icon!!))
-                fs.unlinkSync(path.join(`public/uploads/${oldCategory?.icon}`));
-
             const category = await categorySchema.findByIdAndUpdate(
                 req.params.id,
                 {
@@ -55,6 +52,9 @@ export const update = async (req: Request, res: Response) => {
                 },
                 { new: true }
             );
+
+            if (req.file !== undefined && !CATEGORY_ICONS.includes(oldCategory?.icon!!))
+                fs.unlinkSync(path.join(`public/uploads/${oldCategory?.icon}`));
 
             OK(res, { category: category });
         } else UNAUTHORIZED(res);

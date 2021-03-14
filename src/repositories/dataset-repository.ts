@@ -212,9 +212,6 @@ export const update = async (req: Request, res: Response) => {
         const oldDataset = await datasetSchema.findById(req.params.id);
 
         if (auth?.level === AuthLevel.ORGANIZATION && oldDataset?.organizationId === organization?._id.toString()) {
-            if (req.file !== undefined && oldDataset!!.attachment !== DATASET_ATTACHMENT_FOR_SEEDER)
-                fs.unlinkSync(path.join(`public/uploads/${oldDataset?.attachment}`));
-
             const dataset = await datasetSchema.findByIdAndUpdate(
                 req.params.id,
                 {
@@ -230,6 +227,9 @@ export const update = async (req: Request, res: Response) => {
                 },
                 { new: true }
             );
+
+            if (req.file !== undefined && oldDataset!!.attachment !== DATASET_ATTACHMENT_FOR_SEEDER)
+                fs.unlinkSync(path.join(`public/uploads/${oldDataset?.attachment}`));
 
             OK(res, { dataset: dataset });
         } else UNAUTHORIZED(res);
@@ -264,8 +264,8 @@ export const remove = async (req: Request, res: Response) => {
         const dataset = await datasetSchema.findById(req.params.id);
 
         if (auth?.level === AuthLevel.ORGANIZATION && dataset?.organizationId === organization?._id.toString()) {
-            if (dataset!!.attachment !== DATASET_ATTACHMENT_FOR_SEEDER) fs.unlinkSync(path.join(`public/uploads/${dataset?.attachment}`));
             await datasetSchema.findByIdAndDelete(req.params.id);
+            if (dataset!!.attachment !== DATASET_ATTACHMENT_FOR_SEEDER) fs.unlinkSync(path.join(`public/uploads/${dataset?.attachment}`));
             NO_CONTENT(res);
         } else UNAUTHORIZED(res);
     } catch (e: any) {

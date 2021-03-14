@@ -94,9 +94,6 @@ export const update = async (req: Request, res: Response) => {
         if (auth?.level === AuthLevel.ADMIN) {
             const oldOrganization = await organizationSchema.findById(req.params.id);
 
-            if (req.file !== undefined && oldOrganization!!.photo !== ORGANIZATION_PHOTO_FOR_SEEDER)
-                fs.unlinkSync(path.join(`public/uploads/${oldOrganization?.photo}`));
-
             const organization = await organizationSchema.findByIdAndUpdate(
                 req.params.id,
                 {
@@ -110,6 +107,9 @@ export const update = async (req: Request, res: Response) => {
             await authSchema.findByIdAndUpdate(organization?.authId, {
                 [AuthDocument.password]: encrypt(req.body.password),
             });
+
+            if (req.file !== undefined && oldOrganization!!.photo !== ORGANIZATION_PHOTO_FOR_SEEDER)
+                fs.unlinkSync(path.join(`public/uploads/${oldOrganization?.photo}`));
 
             OK(res, { organization: organization });
         } else UNAUTHORIZED(res);
@@ -125,8 +125,8 @@ export const remove = async (req: Request, res: Response) => {
 
         if (auth?.level === AuthLevel.ADMIN) {
             const organization = await organizationSchema.findByIdAndDelete(req.params.id);
-            if (organization!!.photo !== ORGANIZATION_PHOTO_FOR_SEEDER) fs.unlinkSync(path.join(`public/uploads/${organization?.photo}`));
             await authSchema.findByIdAndDelete(organization?.authId);
+            if (organization!!.photo !== ORGANIZATION_PHOTO_FOR_SEEDER) fs.unlinkSync(path.join(`public/uploads/${organization?.photo}`));
             NO_CONTENT(res);
         } else UNAUTHORIZED(res);
     } catch (e: any) {
