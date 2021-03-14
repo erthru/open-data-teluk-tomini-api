@@ -1,9 +1,12 @@
 import { Request, Response } from "express";
-import { ERROR, OK } from "../helpers/json";
+import { CREATED, ERROR, OK, UNAUTHORIZED } from "../helpers/json";
 import { CategoryDocument } from "../schemas/category";
 import datasetSchema, { DatasetDocument } from "../schemas/dataset";
 import { OrganizationDocument } from "../schemas/organization";
 import tagSchema from "../schemas/tag";
+import authSchema, { AuthLevel } from "../schemas/auth";
+import organizationSchema from "../schemas/organization";
+import { createSlug } from "../helpers/generate-string";
 
 const getDatasetsWithTags = async (datasets: any[]): Promise<any[]> => {
     const fixedDatasets: any[] = [];
@@ -166,6 +169,33 @@ export const getBySlug = async (req: Request, res: Response) => {
         const datasetWithTags = await getDatasetWithTags(dataset);
 
         OK(res, { dataset: datasetWithTags });
+    } catch (e: any) {
+        ERROR(res, e.message);
+    }
+};
+
+export const add = async (req: Request, res: Response) => {
+    try {
+        const auth = await authSchema.findById(req.authVerified.id);
+
+        if (auth?.level === AuthLevel.ORGANIZATION) {
+            const dataset = await datasetSchema.create({
+                [DatasetDocument.title]: req.body.title,
+                [DatasetDocument.description]: req.body.description,
+                [DatasetDocument.source]: req.body.source,
+                [DatasetDocument.year]: req.body.year,
+                [DatasetDocument.contact]: req.body.contact,
+                [DatasetDocument.reference]: req.body.reference,
+                [DatasetDocument.attachment]: req.file.filename,
+                [DatasetDocument.slug]: createSlug(req.body.title),
+                [DatasetDocument.downloaded]: 0,
+                [DatasetDocument.tagIds]: req.body.tagIds,
+                [DatasetDocument.categoryId]: req.body.categoryId,
+                [DatasetDocument.organizationId]: req.body.organizationId,
+            });
+
+            CREATED(res, { dataset: dataset });
+        } else UNAUTHORIZED(res);
     } catch (e: any) {
         ERROR(res, e.message);
     }

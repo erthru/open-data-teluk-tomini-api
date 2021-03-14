@@ -12,6 +12,7 @@ import { OrganizationDocument } from "./schemas/organization";
 import * as writerRepository from "./repositories/writer-repository";
 import { CategoryDocument } from "./schemas/category";
 import * as tagRepository from "./repositories/tag-repository";
+import { DatasetDocument } from "./schemas/dataset";
 
 const router = Router();
 
@@ -25,6 +26,7 @@ router.get("/datasets/category-id/:categoryId", datasetRepository.getAllByCatego
 router.get("/datasets/organization-id/:organizationId", datasetRepository.getAllByOrganizationId);
 router.get("/datasets/search/query", datasetRepository.search);
 router.get("/dataset/slug/:slug", datasetRepository.getBySlug);
+router.post("/dataset", checkAuth.verify, uploader(UploadType.datasetAttachment).single(DatasetDocument.attachment), datasetRepository.add);
 router.put("/dataset/:id/increment-downloaded", datasetRepository.updateIncrementDownloaded);
 
 router.get("/visualizations", visualizationRepository.getAll);
