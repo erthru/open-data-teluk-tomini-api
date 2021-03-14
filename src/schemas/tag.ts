@@ -14,6 +14,7 @@ const schema = new Schema(
         [TagDocument.name]: {
             type: String,
             required: true,
+            unique: true,
         },
     },
     {

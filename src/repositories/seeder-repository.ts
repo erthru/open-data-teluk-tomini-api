@@ -50,7 +50,7 @@ export const add = async (req: Request, res: Response) => {
                     [AuthDocument.level]: AuthLevel.ORGANIZATION,
                 });
 
-                const organizationName0 = faker.company.companyName()
+                const organizationName0 = faker.company.companyName();
 
                 await organizationSchema.create({
                     [OrganizationDocument.name]: organizationName0,
@@ -66,7 +66,7 @@ export const add = async (req: Request, res: Response) => {
                     [AuthDocument.level]: AuthLevel.ORGANIZATION,
                 });
 
-                const organizationName1 = faker.company.companyName()
+                const organizationName1 = faker.company.companyName();
 
                 await organizationSchema.create({
                     [OrganizationDocument.name]: organizationName1,
@@ -87,19 +87,20 @@ export const add = async (req: Request, res: Response) => {
                     [WriterDocument.authId]: authForWriter._id,
                 });
 
+                const tagIds: string[] = [];
+
+                for (let i = 0; i < 3; i++) {
+                    const tag = await tagSchema.create({
+                        [TagDocument.name]: `tag${i + 1}`,
+                    });
+
+                    tagIds.push(tag._id);
+                }
+
                 for (let i = 0; i < 100; i++) {
                     const categoryId = (await categorySchema.find())[Math.floor(Math.random() * categorySchema.length)]._id!!;
                     const organizationId = (await organizationSchema.find())[Math.floor(Math.random() * 2)]._id!!;
                     const title = faker.lorem.lines();
-                    const tagIds: string[] = [];
-
-                    for (let i = 0; i < 3; i++) {
-                        const tag = await tagSchema.create({
-                            [TagDocument.name]: `tag${i + 1}`,
-                        });
-
-                        tagIds.push(tag._id);
-                    }
 
                     await datasetSchema.create({
                         [DatasetDocument.title]: title,

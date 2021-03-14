@@ -11,6 +11,7 @@ import uploader, { UploadType } from "./middlewares/uploader";
 import { OrganizationDocument } from "./schemas/organization";
 import * as writerRepository from "./repositories/writer-repository";
 import { CategoryDocument } from "./schemas/category";
+import * as tagRepository from "./repositories/tag-repository";
 
 const router = Router();
 
@@ -54,6 +55,8 @@ router.get("/writers", checkAuth.verify, writerRepository.getAll);
 router.post("/writer", checkAuth.verify, writerRepository.add);
 router.put("/writer/:id", checkAuth.verify, writerRepository.update);
 router.delete("/writer/:id", checkAuth.verify, writerRepository.remove);
+
+router.post("/tag", checkAuth.verify, tagRepository.add);
 
 router.post("/seeder", seederRepository.add);
 
