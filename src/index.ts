@@ -18,11 +18,13 @@ app.use(routes);
 
 const server = createServer(app);
 
-server.listen(PORT, async () => {
+export default server.listen(PORT, async () => {
     await db();
 
-    console.log("⚡️[DATABASE]: CONNECTED");
-    console.log("⚡️[SERVER]: RUNNING");
-    console.log(`⚡️[PORT]: ${PORT}`);
-    console.log("⚡️[MESSAGE]: エブリシングOK、頑張ってねー、エルトホルくん。ヽ(o＾▽＾o)ノ");
+    if (process.env.NODE_ENV !== "test") {
+        console.log("⚡️[DATABASE]: CONNECTED");
+        console.log("⚡️[SERVER]: RUNNING");
+        console.log(`⚡️[PORT]: ${PORT}`);
+        console.log("⚡️[MESSAGE]: エブリシングOK、頑張ってねー、エルトホルくん。ヽ(o＾▽＾o)ノ");
+    }
 });
