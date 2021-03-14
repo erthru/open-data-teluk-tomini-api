@@ -40,7 +40,6 @@
 </ul>
 
 <br />
-<br />
 
 <a href="https://github.com/erthru/open-data-teluk-tomini-web">WEB</a>
 <br />
