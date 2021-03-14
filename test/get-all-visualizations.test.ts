@@ -9,26 +9,26 @@ import server from "../src";
 chai.use(chaiAsPromised);
 chai.use(chaiHttp);
 
-describe("Get All Datasets", () => {
-    let datasets: any[] = [];
+describe("Get All Visualization", () => {
+    let visualizations: any[] = [];
 
-    it("should load all datasets on [GET] /datasets", async () => {
-        const res = await chai.request(server).get("/datasets?page=1&limit=10");
+    it("should load all visualizations on [GET] /visualization", async () => {
+        const res = await chai.request(server).get("/visualizations?page=1&limit=10");
 
         chai.expect(res.body.error).to.eql(false);
         chai.expect(res.body.message).to.eql("OK");
-        chai.expect(res.body).to.haveOwnProperty("datasets")
+        chai.expect(res.body).to.haveOwnProperty("visualizations")
         chai.expect(res.body).to.haveOwnProperty("total")
-        chai.expect(res.body.datasets).to.have.length(10);
+        chai.expect(res.body.visualizations).to.have.length(10)
 
-        datasets = res.body.datasets;
+        visualizations = res.body.visualizations;
     });
 
     it("next page result should different from previous test", async () => {
-        const res = await chai.request(server).get("/datasets?page=2&limit=10");
+        const res = await chai.request(server).get("/visualizations?page=2&limit=10");
 
         chai.expect(res.body.error).to.eql(false);
         chai.expect(res.body.message).to.eql("OK");
-        chai.expect(datasets).not.eql(res.body.datasets);
+        chai.expect(visualizations).not.eql(res.body.visualizations);
     });
 });

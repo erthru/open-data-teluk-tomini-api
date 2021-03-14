@@ -15,5 +15,7 @@ describe("Get All Categories", () => {
 
         chai.expect(res.body.error).to.eql(false);
         chai.expect(res.body.message).to.eql("OK");
+        chai.expect(res.body).to.haveOwnProperty("categories")
+        chai.expect(res.body).to.haveOwnProperty("total")
     });
 });
