@@ -29,6 +29,7 @@ router.get("/dataset/slug/:slug", datasetRepository.getBySlug);
 router.post("/dataset", checkAuth.verify, uploader(UploadType.datasetAttachment).single(DatasetDocument.attachment), datasetRepository.add);
 router.put("/dataset/:id", checkAuth.verify, uploader(UploadType.datasetAttachment).single(DatasetDocument.attachment), datasetRepository.update);
 router.put("/dataset/:id/increment-downloaded", datasetRepository.updateIncrementDownloaded);
+router.delete("/dataset/:id", checkAuth.verify, datasetRepository.remove);
 
 router.get("/visualizations", visualizationRepository.getAll);
 router.get("/visualizations/search/query", visualizationRepository.search);

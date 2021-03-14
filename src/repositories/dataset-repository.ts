@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CREATED, ERROR, OK, UNAUTHORIZED } from "../helpers/json";
+import { CREATED, ERROR, NO_CONTENT, OK, UNAUTHORIZED } from "../helpers/json";
 import { CategoryDocument } from "../schemas/category";
 import datasetSchema, { DatasetDocument } from "../schemas/dataset";
 import { OrganizationDocument } from "../schemas/organization";
@@ -200,6 +200,7 @@ export const add = async (req: Request, res: Response) => {
             CREATED(res, { dataset: dataset });
         } else UNAUTHORIZED(res);
     } catch (e: any) {
+        if (req.file !== undefined) fs.unlinkSync(path.join(`public/uploads/${req.file.filename}`));
         ERROR(res, e.message);
     }
 };
@@ -212,7 +213,7 @@ export const update = async (req: Request, res: Response) => {
 
         if (auth?.level === AuthLevel.ORGANIZATION && oldDataset?.organizationId === organization?._id.toString()) {
             if (req.file !== undefined && oldDataset!!.attachment !== DATASET_ATTACHMENT_FOR_SEEDER)
-                fs.unlinkSync(path.join("public/uploads/" + oldDataset?.attachment));
+                fs.unlinkSync(path.join(`public/uploads/${oldDataset?.attachment}`));
 
             const dataset = await datasetSchema.findByIdAndUpdate(
                 req.params.id,
@@ -233,6 +234,7 @@ export const update = async (req: Request, res: Response) => {
             OK(res, { dataset: dataset });
         } else UNAUTHORIZED(res);
     } catch (e: any) {
+        if (req.file !== undefined) fs.unlinkSync(path.join(`public/uploads/${req.file.filename}`));
         ERROR(res, e.message);
     }
 };
@@ -250,6 +252,22 @@ export const updateIncrementDownloaded = async (req: Request, res: Response) => 
         );
 
         OK(res, { dataset: dataset });
+    } catch (e: any) {
+        ERROR(res, e.message);
+    }
+};
+
+export const remove = async (req: Request, res: Response) => {
+    try {
+        const auth = await authSchema.findById(req.authVerified.id);
+        const organization = await organizationSchema.findOne({ [OrganizationDocument.authId]: auth?._id });
+        const dataset = await datasetSchema.findById(req.params.id);
+
+        if (auth?.level === AuthLevel.ORGANIZATION && dataset?.organizationId === organization?._id.toString()) {
+            if (dataset!!.attachment !== DATASET_ATTACHMENT_FOR_SEEDER) fs.unlinkSync(path.join(`public/uploads/${dataset?.attachment}`));
+            await datasetSchema.findByIdAndDelete(req.params.id);
+            NO_CONTENT(res);
+        } else UNAUTHORIZED(res);
     } catch (e: any) {
         ERROR(res, e.message);
     }

@@ -32,6 +32,7 @@ export const add = async (req: Request, res: Response) => {
             CREATED(res, { category: category });
         } else UNAUTHORIZED(res);
     } catch (e: any) {
+        if (req.file !== undefined) fs.unlinkSync(path.join(`public/uploads/${req.file.filename}`));
         ERROR(res, e.message);
     }
 };
@@ -44,7 +45,7 @@ export const update = async (req: Request, res: Response) => {
             const oldCategory = await categorySchema.findById(req.params.id);
 
             if (req.file !== undefined && !CATEGORY_ICONS.includes(oldCategory?.icon!!))
-                fs.unlinkSync(path.join("public/uploads/" + oldCategory?.icon));
+                fs.unlinkSync(path.join(`public/uploads/${oldCategory?.icon}`));
 
             const category = await categorySchema.findByIdAndUpdate(
                 req.params.id,
@@ -58,6 +59,7 @@ export const update = async (req: Request, res: Response) => {
             OK(res, { category: category });
         } else UNAUTHORIZED(res);
     } catch (e: any) {
+        if (req.file !== undefined) fs.unlinkSync(path.join(`public/uploads/${req.file.filename}`));
         ERROR(res, e.message);
     }
 };
@@ -68,7 +70,7 @@ export const remove = async (req: Request, res: Response) => {
 
         if (auth?.level === AuthLevel.ADMIN) {
             const category = await categorySchema.findByIdAndDelete(req.params.id);
-            if (!CATEGORY_ICONS.includes(category?.icon!!)) fs.unlinkSync(path.join("public/uploads/" + category?.icon));
+            if (!CATEGORY_ICONS.includes(category?.icon!!)) fs.unlinkSync(path.join(`public/uploads/${category?.icon}`));
             NO_CONTENT(res);
         } else UNAUTHORIZED(res);
     } catch (e: any) {
