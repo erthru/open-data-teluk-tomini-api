@@ -14,6 +14,7 @@ import { CategoryDocument } from "./schemas/category";
 import * as tagRepository from "./repositories/tag-repository";
 import { DatasetDocument } from "./schemas/dataset";
 import { VisualizationDocument } from "./schemas/visualization";
+import { InfographicDocument } from "./schemas/infographic";
 
 const router = Router();
 
@@ -63,6 +64,14 @@ router.delete("/organization/:id", checkAuth.verify, organizationRepository.remo
 
 router.get("/infographics", infographicRepository.getAll);
 router.get("/infographics/search/query", infographicRepository.search);
+router.post("/infographic", checkAuth.verify, uploader(UploadType.infographicBanner).single(InfographicDocument.banner), infographicRepository.add);
+router.put(
+    "/infographic/:id",
+    checkAuth.verify,
+    uploader(UploadType.infographicBanner).single(InfographicDocument.banner),
+    infographicRepository.update
+);
+router.delete("/infographic/:id", checkAuth.verify, infographicRepository.remove);
 
 router.get("/auth/refresh", checkAuth.verifyForRefresh, authRepository.refresh);
 router.get("/auth/me", checkAuth.verify, authRepository.get);
