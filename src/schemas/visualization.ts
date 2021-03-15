@@ -2,6 +2,7 @@ import mongoose, { Document, Schema } from "mongoose";
 import { BASE_URL } from "../helpers/environments";
 import { OrganizationDocument } from "./organization";
 import { WriterDocument } from "./writer";
+import { v4 as uuidV4 } from "uuid";
 
 export enum VisualizationDocument {
     schemaName = "visualization",
@@ -24,6 +25,11 @@ interface IVisualization extends Document {
 
 const schema = new Schema(
     {
+        _id: {
+            type: String,
+            default: uuidV4,
+        },
+
         [VisualizationDocument.title]: {
             type: String,
             required: true,

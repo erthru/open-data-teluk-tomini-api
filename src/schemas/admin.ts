@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
+import { v4 as uuidV4 } from "uuid";
 
 export enum AdminDocument {
     schemaName = "admin",
@@ -13,6 +14,11 @@ interface IAdmin extends Document {
 
 const schema = new Schema(
     {
+        _id: {
+            type: String,
+            default: uuidV4,
+        },
+
         [AdminDocument.fullName]: {
             type: String,
             required: true,

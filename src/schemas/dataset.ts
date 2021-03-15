@@ -2,6 +2,7 @@ import mongoose, { Document, Schema } from "mongoose";
 import { BASE_URL } from "../helpers/environments";
 import { CategoryDocument } from "./category";
 import { OrganizationDocument } from "./organization";
+import { v4 as uuidV4 } from "uuid";
 
 export enum DatasetDocument {
     schemaName = "dataset",
@@ -36,6 +37,11 @@ interface IDataset extends Document {
 
 const schema = new Schema(
     {
+        _id: {
+            type: String,
+            default: uuidV4,
+        },
+
         [DatasetDocument.title]: {
             type: String,
             required: true,

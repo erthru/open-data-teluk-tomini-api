@@ -1,5 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
 import { BASE_URL } from "../helpers/environments";
+import { v4 as uuidV4 } from "uuid";
 
 export enum CategoryDocument {
     schemaName = "category",
@@ -14,6 +15,11 @@ interface ICategory extends Document {
 
 const schema = new Schema(
     {
+        _id: {
+            type: String,
+            default: uuidV4,
+        },
+
         [CategoryDocument.name]: {
             type: String,
             unique: true,
