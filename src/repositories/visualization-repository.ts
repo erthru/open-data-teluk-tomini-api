@@ -6,6 +6,7 @@ import fs from "fs";
 import path from "path";
 import { createSlug } from "../helpers/generate-string";
 import { VISUALIZATION_THUMBNAIL_FOR_SEEDER } from "../helpers/constants";
+import writerSchema, { WriterDocument } from "../schemas/writer";
 
 export const getAll = async (req: Request, res: Response) => {
     try {
@@ -60,6 +61,7 @@ export const getBySlug = async (req: Request, res: Response) => {
 export const add = async (req: Request, res: Response) => {
     try {
         const auth = await authSchema.findById(req.authVerified.id);
+        const writer = await writerSchema.findOne({ [WriterDocument.authId]: auth?._id });
 
         if (auth?.level === AuthLevel.WRITER) {
             const visualization = await visualizationSchema.create({
@@ -68,7 +70,7 @@ export const add = async (req: Request, res: Response) => {
                 [VisualizationDocument.thumbnail]: req.file.filename,
                 [VisualizationDocument.slug]: createSlug(req.body.title),
                 [VisualizationDocument.organizationId]: req.body.organizationId,
-                [VisualizationDocument.writerId]: req.body.writerId,
+                [VisualizationDocument.writerId]: writer?._id,
             });
 
             CREATED(res, { visualization: visualization });
@@ -114,7 +116,7 @@ export const remove = async (req: Request, res: Response) => {
 
         if (auth?.level === AuthLevel.WRITER) {
             const visualization = await visualizationSchema.findByIdAndDelete(req.params.id);
-            
+
             if (visualization!!.thumbnail !== VISUALIZATION_THUMBNAIL_FOR_SEEDER)
                 fs.unlinkSync(path.join(`public/uploads/${visualization?.thumbnail}`));
 

@@ -5,6 +5,7 @@ import authSchema, { AuthLevel } from "../schemas/auth";
 import fs from "fs";
 import path from "path";
 import { INFOGRAPHIC_BANNER_FOR_SEEDER } from "../helpers/constants";
+import writerSchema, { WriterDocument } from "../schemas/writer";
 
 export const getAll = async (req: Request, res: Response) => {
     try {
@@ -50,12 +51,13 @@ export const search = async (req: Request, res: Response) => {
 export const add = async (req: Request, res: Response) => {
     try {
         const auth = await authSchema.findById(req.authVerified.id);
+        const writer = await writerSchema.findOne({ [WriterDocument.authId]: auth?._id });
 
         if (auth?.level === AuthLevel.WRITER) {
             const infographic = await infographicSchema.create({
                 [InfographicDocument.title]: req.body.title,
                 [InfographicDocument.banner]: req.file.filename,
-                [InfographicDocument.writerId]: req.body.writerId,
+                [InfographicDocument.writerId]: writer?._id,
             });
 
             CREATED(res, { infographic: infographic });

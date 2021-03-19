@@ -180,6 +180,7 @@ export const getBySlug = async (req: Request, res: Response) => {
 export const add = async (req: Request, res: Response) => {
     try {
         const auth = await authSchema.findById(req.authVerified.id);
+        const organization = await organizationSchema.findOne({ [OrganizationDocument.authId]: auth?._id });
 
         if (auth?.level === AuthLevel.ORGANIZATION) {
             const dataset = await datasetSchema.create({
@@ -194,7 +195,7 @@ export const add = async (req: Request, res: Response) => {
                 [DatasetDocument.downloaded]: 0,
                 [DatasetDocument.tagIds]: req.body.tagIds,
                 [DatasetDocument.categoryId]: req.body.categoryId,
-                [DatasetDocument.organizationId]: req.body.organizationId,
+                [DatasetDocument.organizationId]: organization?._id,
             });
 
             CREATED(res, { dataset: dataset });
