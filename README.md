@@ -44,4 +44,4 @@
 
 <a href="https://github.com/erthru/open-data-teluk-tomini-web">WEB</a>
 <br />
-<a href="https://github.com/erthru/open-data-teluk-tomini-web-admin">WEB ADMIN</a>
+<a href="https://github.com/erthru/open-data-teluk-tomini-web-control">WEB CONTROL</a>
