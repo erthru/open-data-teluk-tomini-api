@@ -18,7 +18,6 @@ export const refresh = async (req: Request, res: Response) => {
         const token = jwt.sign(
             {
                 id: auth!!._id,
-                level: auth!!.level,
                 isRefreshToken: false,
             },
             TOKEN_SECRET,
@@ -28,7 +27,6 @@ export const refresh = async (req: Request, res: Response) => {
         const refreshToken = jwt.sign(
             {
                 id: auth!!._id,
-                level: auth!!.level,
                 isRefreshToken: true,
             },
             TOKEN_SECRET,
@@ -88,7 +86,6 @@ export const login = async (req: Request, res: Response) => {
             const token = jwt.sign(
                 {
                     id: auth._id,
-                    level: auth.level,
                     isRefreshToken: false,
                 },
                 TOKEN_SECRET,
@@ -98,7 +95,6 @@ export const login = async (req: Request, res: Response) => {
             const refreshToken = jwt.sign(
                 {
                     id: auth._id,
-                    level: auth.level,
                     isRefreshToken: true,
                 },
                 TOKEN_SECRET,
