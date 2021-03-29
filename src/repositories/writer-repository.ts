@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 import { CREATED, ERROR, OK, UNAUTHORIZED, NO_CONTENT } from "../helpers/json";
 import writerSchema, { WriterDocument } from "../schemas/writer";
 import authSchema, { AuthDocument, AuthLevel } from "../schemas/auth";
-import { encrypt } from "../helpers/encryption";
+import bcrypt from "bcrypt";
+import { HASH_SALT_ROUND } from "../helpers/environments";
 
 export const getAll = async (req: Request, res: Response) => {
     try {
@@ -24,11 +25,12 @@ export const getAll = async (req: Request, res: Response) => {
 export const add = async (req: Request, res: Response) => {
     try {
         const auth = await authSchema.findById(req.authVerified.id);
+        const hashedPassword = await bcrypt.hash(req.body.password, HASH_SALT_ROUND);
 
         if (auth?.level === AuthLevel.ADMIN) {
             const newAuth = await authSchema.create({
                 [AuthDocument.username]: req.body.username,
-                [AuthDocument.password]: encrypt(req.body.password),
+                [AuthDocument.password]: hashedPassword,
                 [AuthDocument.level]: AuthLevel.WRITER,
             });
 
@@ -47,6 +49,7 @@ export const add = async (req: Request, res: Response) => {
 export const update = async (req: Request, res: Response) => {
     try {
         const auth = await authSchema.findById(req.authVerified.id);
+        const hashedPassword = await bcrypt.hash(req.body.password, HASH_SALT_ROUND);
 
         if (auth?.level === AuthLevel.ADMIN) {
             const writer = await writerSchema.findByIdAndUpdate(
@@ -58,7 +61,7 @@ export const update = async (req: Request, res: Response) => {
             );
 
             await authSchema.findByIdAndUpdate(writer?.authId, {
-                [AuthDocument.password]: encrypt(req.body.password),
+                [AuthDocument.password]: hashedPassword,
             });
 
             OK(res, { writer: writer });

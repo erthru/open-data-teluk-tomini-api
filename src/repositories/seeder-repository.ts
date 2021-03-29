@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Mode, MODE, SEEDER_PASSWORD } from "../helpers/environments";
+import { HASH_SALT_ROUND, Mode, MODE, SEEDER_PASSWORD } from "../helpers/environments";
 import { CREATED, ERROR, UNAUTHORIZED } from "../helpers/json";
 import faker from "faker";
 import {
@@ -13,7 +13,6 @@ import {
 import categorySchema, { CategoryDocument } from "../schemas/category";
 import authSchema, { AuthDocument, AuthLevel } from "../schemas/auth";
 import adminSchema, { AdminDocument } from "../schemas/admin";
-import { encrypt } from "../helpers/encryption";
 import organizationSchema, { OrganizationDocument } from "../schemas/organization";
 import writerSchema, { WriterDocument } from "../schemas/writer";
 import datasetSchema, { DatasetDocument } from "../schemas/dataset";
@@ -21,9 +20,14 @@ import { createSlug } from "../helpers/generate-string";
 import tagSchema, { TagDocument } from "../schemas/tag";
 import infographicSchema, { InfographicDocument } from "../schemas/infographic";
 import visualizationSchema, { VisualizationDocument } from "../schemas/visualization";
+import bcrypt from "bcrypt";
 
 export const add = async (req: Request, res: Response) => {
     try {
+        const hashedPasswordAdmin = await bcrypt.hash("admin", HASH_SALT_ROUND);
+        const hashedPasswordOrganization = await bcrypt.hash("organization", HASH_SALT_ROUND);
+        const hashedPasswordWriter = await bcrypt.hash("writer", HASH_SALT_ROUND);
+
         if (req.body.password === SEEDER_PASSWORD) {
             for (let i = 0; i < CATEGORY_NAMES.length; i++) {
                 await categorySchema.create({
@@ -34,7 +38,7 @@ export const add = async (req: Request, res: Response) => {
 
             const authForAdmin = await authSchema.create({
                 [AuthDocument.username]: "admin",
-                [AuthDocument.password]: encrypt("admin"),
+                [AuthDocument.password]: hashedPasswordAdmin,
                 [AuthDocument.level]: AuthLevel.ADMIN,
             });
 
@@ -46,7 +50,7 @@ export const add = async (req: Request, res: Response) => {
             if (MODE === Mode.dev) {
                 const authForOrganization0 = await authSchema.create({
                     [AuthDocument.username]: "organization_0",
-                    [AuthDocument.password]: encrypt("organization"),
+                    [AuthDocument.password]: hashedPasswordOrganization,
                     [AuthDocument.level]: AuthLevel.ORGANIZATION,
                 });
 
@@ -62,7 +66,7 @@ export const add = async (req: Request, res: Response) => {
 
                 const authForOrganization1 = await authSchema.create({
                     [AuthDocument.username]: "organization_1",
-                    [AuthDocument.password]: encrypt("organization"),
+                    [AuthDocument.password]: hashedPasswordOrganization,
                     [AuthDocument.level]: AuthLevel.ORGANIZATION,
                 });
 
@@ -78,7 +82,7 @@ export const add = async (req: Request, res: Response) => {
 
                 const authForWriter = await authSchema.create({
                     [AuthDocument.username]: "writer",
-                    [AuthDocument.password]: encrypt("writer"),
+                    [AuthDocument.password]: hashedPasswordWriter,
                     [AuthDocument.level]: AuthLevel.WRITER,
                 });
 

@@ -1,15 +1,15 @@
 import { Request, Response } from "express";
-import { decrypt, encrypt } from "../helpers/encryption";
-import { ERROR, OK, UNAUTHORIZED } from "../helpers/json";
+import { ERROR, OK } from "../helpers/json";
 import authSchema, { AuthDocument, AuthLevel } from "../schemas/auth";
 import jwt from "jsonwebtoken";
-import { TOKEN_SECRET } from "../helpers/environments";
+import { HASH_SALT_ROUND, TOKEN_SECRET } from "../helpers/environments";
 import adminSchema, { AdminDocument } from "../schemas/admin";
 import organizationSchema, { OrganizationDocument } from "../schemas/organization";
 import writerSchema, { WriterDocument } from "../schemas/writer";
 import { ORGANIZATION_PHOTO_FOR_SEEDER } from "../helpers/constants";
 import fs from "fs";
 import path from "path";
+import bcrypt from "bcrypt";
 
 export const refresh = async (req: Request, res: Response) => {
     try {
@@ -82,7 +82,7 @@ export const login = async (req: Request, res: Response) => {
     try {
         const auth = await authSchema.findOne({ [AuthDocument.username]: req.body.username });
 
-        if (auth !== null && decrypt(auth.password!!) === req.body.password) {
+        if (auth !== null && (await bcrypt.compare(req.body.password, auth?.password!!))) {
             const token = jwt.sign(
                 {
                     id: auth._id,
@@ -121,12 +121,13 @@ export const login = async (req: Request, res: Response) => {
 export const update = async (req: Request, res: Response) => {
     try {
         const oldAuth = await authSchema.findById(req.authVerified.id);
+        const hashedPassword = await bcrypt.hash(req.body.password, HASH_SALT_ROUND);
 
         if (oldAuth?.level === AuthLevel.ADMIN) {
             const auth = await authSchema.findByIdAndUpdate(
                 oldAuth._id,
                 {
-                    [AuthDocument.password]: encrypt(req.body.password),
+                    [AuthDocument.password]: hashedPassword,
                 },
                 { new: true }
             );
@@ -149,7 +150,7 @@ export const update = async (req: Request, res: Response) => {
             const auth = await authSchema.findByIdAndUpdate(
                 oldAuth._id,
                 {
-                    [AuthDocument.password]: encrypt(req.body.password),
+                    [AuthDocument.password]: hashedPassword,
                 },
                 { new: true }
             );
@@ -179,7 +180,7 @@ export const update = async (req: Request, res: Response) => {
             const auth = await authSchema.findByIdAndUpdate(
                 oldAuth._id,
                 {
-                    [AuthDocument.password]: encrypt(req.body.password),
+                    [AuthDocument.password]: hashedPassword,
                 },
                 { new: true }
             );

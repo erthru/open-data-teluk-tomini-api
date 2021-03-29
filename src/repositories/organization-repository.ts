@@ -3,11 +3,12 @@ import { CREATED, ERROR, NO_CONTENT, OK, UNAUTHORIZED } from "../helpers/json";
 import datasetSchema, { DatasetDocument } from "../schemas/dataset";
 import organizationSchema, { OrganizationDocument } from "../schemas/organization";
 import authSchema, { AuthDocument, AuthLevel } from "../schemas/auth";
-import { encrypt } from "../helpers/encryption";
 import { createSlug } from "../helpers/generate-string";
 import fs from "fs";
 import path from "path";
 import { ORGANIZATION_PHOTO_FOR_SEEDER } from "../helpers/constants";
+import bcrypt from "bcrypt";
+import { HASH_SALT_ROUND } from "../helpers/environments";
 
 const getOrganizationsWithDatasetsTotal = async (organizations: any[]): Promise<any[]> => {
     const fixedOrganizations = [];
@@ -63,11 +64,12 @@ export const getBySlug = async (req: Request, res: Response) => {
 export const add = async (req: Request, res: Response) => {
     try {
         const auth = await authSchema.findById(req.authVerified.id);
+        const hashedPassword = await bcrypt.hash(req.body.password, HASH_SALT_ROUND);
 
         if (auth?.level === AuthLevel.ADMIN) {
             const newAuth = await authSchema.create({
                 [AuthDocument.username]: req.body.username,
-                [AuthDocument.password]: encrypt(req.body.password),
+                [AuthDocument.password]: hashedPassword,
                 [AuthDocument.level]: AuthLevel.ORGANIZATION,
             });
 
@@ -90,6 +92,7 @@ export const add = async (req: Request, res: Response) => {
 export const update = async (req: Request, res: Response) => {
     try {
         const auth = await authSchema.findById(req.authVerified.id);
+        const hashedPassword = await bcrypt.hash(req.body.password, HASH_SALT_ROUND);
 
         if (auth?.level === AuthLevel.ADMIN) {
             const oldOrganization = await organizationSchema.findById(req.params.id);
@@ -105,7 +108,7 @@ export const update = async (req: Request, res: Response) => {
             );
 
             await authSchema.findByIdAndUpdate(organization?.authId, {
-                [AuthDocument.password]: encrypt(req.body.password),
+                [AuthDocument.password]: hashedPassword,
             });
 
             if (req.file !== undefined && oldOrganization!!.photo !== ORGANIZATION_PHOTO_FOR_SEEDER)
