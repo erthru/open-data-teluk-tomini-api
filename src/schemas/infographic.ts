@@ -53,7 +53,7 @@ schema.virtual(WriterDocument.schemaName, {
 schema.set("toJSON", {
     transform: (_: any, ret: any, __: any) => {
         delete ret.id;
-        ret[InfographicDocument.banner] = BASE_URL + "uploads/" + ret[InfographicDocument.banner];
+        ret[InfographicDocument.banner] = `${BASE_URL}uploads/${ret[InfographicDocument.banner]}`;
 
         return ret;
     },

@@ -158,7 +158,7 @@ export const update = async (req: Request, res: Response) => {
             const oldOrganization = await organizationSchema.findOne({ [OrganizationDocument.authId]: auth!!._id });
 
             if (req.file !== undefined && oldOrganization!!.photo !== ORGANIZATION_PHOTO_FOR_SEEDER)
-                fs.unlinkSync(path.join("public/uploads/" + oldOrganization?.photo));
+                fs.unlinkSync(path.join(`public/uploads/${oldOrganization?.photo}`));
 
             const organization = await organizationSchema.findOneAndUpdate(
                 { [OrganizationDocument.authId]: auth?._id },

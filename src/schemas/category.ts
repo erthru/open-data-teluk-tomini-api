@@ -39,7 +39,7 @@ const schema = new Schema(
 schema.set("toJSON", {
     transform: (_: any, ret: any, __: any) => {
         delete ret.id;
-        ret[CategoryDocument.icon] = BASE_URL + "uploads/" + ret[CategoryDocument.icon];
+        ret[CategoryDocument.icon] = `${BASE_URL}uploads/${ret[CategoryDocument.icon]}`;
 
         return ret;
     },

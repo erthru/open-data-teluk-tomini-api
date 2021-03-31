@@ -15,11 +15,11 @@ export default (uploadType: UploadType) => {
             const unique = Date.now() + "-" + Math.round(Math.random() * 1e9);
             const ext = file.originalname.substring(file.originalname.lastIndexOf("."), file.originalname.length);
 
-            if (uploadType === UploadType.organizationPhoto) cb(null, "organization-photo-" + unique + ext);
-            if (uploadType === UploadType.categoryIcon) cb(null, "category-icon-" + unique + ext);
-            if (uploadType === UploadType.datasetAttachment) cb(null, "dataset-attachment-" + unique + ext);
-            if (uploadType === UploadType.visualizationThumbnail) cb(null, "visualization-thumbnail-" + unique + ext);
-            if (uploadType === UploadType.infographicBanner) cb(null, "infographic-banner-" + unique + ext);
+            if (uploadType === UploadType.organizationPhoto) cb(null, `organization-photo-${unique + ext}`);
+            if (uploadType === UploadType.categoryIcon) cb(null, `category-icon-${unique + ext}`);
+            if (uploadType === UploadType.datasetAttachment) cb(null, `dataset-attachment-${unique + ext}`);
+            if (uploadType === UploadType.visualizationThumbnail) cb(null, `visualization-thumbnail-${unique + ext}`);
+            if (uploadType === UploadType.infographicBanner) cb(null, `infographic-banner-${unique + ext}`);
         },
     });
 

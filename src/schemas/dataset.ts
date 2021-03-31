@@ -120,7 +120,7 @@ schema.virtual(OrganizationDocument.schemaName, {
 schema.set("toJSON", {
     transform: (_: any, ret: any, __: any) => {
         delete ret.id;
-        ret[DatasetDocument.attachment] = BASE_URL + "uploads/" + ret[DatasetDocument.attachment];
+        ret[DatasetDocument.attachment] = `${BASE_URL}uploads/${ret[DatasetDocument.attachment]}`;
 
         return ret;
     },
